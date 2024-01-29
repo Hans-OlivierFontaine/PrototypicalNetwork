@@ -5,8 +5,8 @@ from PIL import Image
 
 
 class PrototypicalDataset(Dataset):
-    def __init__(self, csv_file, root_dir, transform=None):
-        self.data = pd.read_csv(csv_file)
+    def __init__(self, root_dir: Path, csv_name: str, transform=None):
+        self.data = pd.read_csv(root_dir / csv_name)
         self.root_dir = Path(root_dir)
         self.transform = transform
 
