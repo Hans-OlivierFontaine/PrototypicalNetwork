@@ -33,6 +33,7 @@ def parse_args():
 
     # Training parameters
     parser.add_argument("--lr", type=float, default=0.001, help="Learning rate")
+    parser.add_argument("--model_save", type=Path, default=Path("./data/model.pth"), help="Trained model path")
 
     return parser.parse_args()
 
@@ -41,7 +42,7 @@ if __name__ == "__main__":
     args = parse_args()
 
     # Define transformations for your images
-    transform = transforms.Compose([transforms.Resize((224, 224)), transforms.ToTensor()])
+    transform = transforms.Compose([transforms.Resize((args["imgsz"], args["imgsz"])), transforms.ToTensor()])
 
     # Create the dataset
     dataset = PrototypicalDataset(root_dir=args.root_dir, csv_name="train.csv", transform=transform)
@@ -65,3 +66,5 @@ if __name__ == "__main__":
             loss = prototypical_loss(support_embeddings, query_embeddings, args.n_ways, args.k_shots, args.metric)
             loss.backward()
             optimizer.step()
+
+    torch.save(model.state_dict(), args["model_save"])
